@@ -1,9 +1,11 @@
-const express = require('express');
+const express = require("express");
+const routes = require("./routes");
 
 const app = express();
+const port = process.env.PORT || 5000;
 
-const routes = require('./routes/index');
+app.use("/", routes);
 
-app.use(routes);
-
-app.listen(process.env.PORT || 5000);
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
