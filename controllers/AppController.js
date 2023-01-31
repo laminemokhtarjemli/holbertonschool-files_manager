@@ -1,27 +1,18 @@
-const RedisClient = require('../utils/redis');
-const DBClient = require('../utils/db');
+const redisClient = require("../utils/redis");
+const dbClient = require("../utils/db");
 
-const redisClient = new RedisClient();
-const dbClient = new DBClient();
+const getStatus = async (req, res) => {
+  const redisStatus = redisClient.isAlive();
+  const dbStatus = await dbClient.isAlive();
 
-const getStatus = (req, res) => {
-res.status(200).send({
-redis: redisClient.isAlive(),
-db: dbClient.isAlive(),
-});
+  return res.status(200).json({ redis: redisStatus, db: dbStatus });
 };
 
 const getStats = async (req, res) => {
-const users = await dbClient.nbUsers();
-const files = await dbClient.nbFiles();
+  const nbUsers = await dbClient.nbUsers();
+  const nbFiles = await dbClient.nbFiles();
 
-res.status(200).send({
-users,
-files,
-});
+  return res.status(200).json({ users: nbUsers, files: nbFiles });
 };
 
-module.exports = {
-getStatus,
-getStats,
-};
+module.exports = { getStatus, getStats };
